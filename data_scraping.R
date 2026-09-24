@@ -16,9 +16,6 @@ library(sf)
 # 1. Download daily EDEN data
 # =============================================================================
 download_eden_data <- function(eden_path = "data/WaterData") {
-  cat("📥 Downloading fresh EDEN water data...\n")
-  
-  # Ensure the directory exists
   dir.create(eden_path, recursive = TRUE, showWarnings = FALSE)
   
   # Update and fetch water data based on your pipeline's logic
@@ -33,19 +30,18 @@ download_eden_data <- function(eden_path = "data/WaterData") {
     mutate(year = as.integer(year)) |>
     arrange(year, region)
   
-  cat("✓ EDEN data successfully compiled.\n")
   return(water)
 }
 
 # =============================================================================
 # 2. Download shapefiles of nesting location for WOST
 # =============================================================================
+
 download_wost_shapefiles <- function(save_dir = "data/shapefiles") {
-  cat("📥 Downloading WOST nesting shapefiles...\n")
   dir.create(save_dir, recursive = TRUE, showWarnings = FALSE)
   
   # TODO: Replace this URL with the actual link to your shapefile zip archive
-  shapefile_url <- "https://example.com/path/to/wost_shapefiles.zip"
+  shapefile_url <- "https://github.com/weecology/EvergladesWadingBird/tree/main/SiteandMethods/colonies"
   dest_file <- file.path(save_dir, "wost_shapefiles.zip")
   
   tryCatch({
