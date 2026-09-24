@@ -59,29 +59,30 @@ download_eden_data <- function(eden_path = "data/WaterData") {
   return(water)
 }
 
+
 # =============================================================================
 # 2. Download shapefiles of nesting location for WOST
 # =============================================================================
-download_eden_data <- function(eden_path = "data/WaterData") {
-  dir.create(eden_path, recursive = TRUE, showWarnings = FALSE)
+download_wost_shapefiles <- function(save_dir = "data/shapefiles") {
+  dir.create(save_dir, recursive = TRUE, showWarnings = FALSE)
   
-  # Update and fetch water data
-  update_water(eden_path)
+  # Use the RAW GitHub URL for the colonies geojson file
+  shapefile_url <- "https://raw.githubusercontent.com/weecology/EvergladesWadingBird/main/SiteandMethods/colonies/colonies.geojson"
+  dest_file <- file.path(save_dir, "colonies.geojson")
   
-  water <- get_eden_covariates(eden_path = eden_path, level = "subregions") |>
-    bind_rows(get_eden_covariates(eden_path = eden_path, level = "all")) |>
-    bind_rows(get_eden_covariates(eden_path = eden_path, level = "wcas")) |>
-    # The date is usually stored in the dataframe returned by get_eden_covariates
-    # We filter out anything after June 30, 2026 (skipping Q3 and Q4)
-    filter(date <= as.Date("2026-06-30")) |> 
-    dplyr::select(year, region = Name, variable, value) |>
-    as.data.frame() |>
-    dplyr::select(-geometry) |>
-    pivot_wider(names_from = "variable", values_from = "value") |>
-    mutate(year = as.integer(year)) |>
-    arrange(year, region)
-  
-  return(water)
+  tryCatch({
+    # Download the geojson file
+    download.file(shapefile_url, destfile = dest_file, mode = "wb", quiet = TRUE)
+    cat("Shapefiles downloaded to:", dest_file, "\n")
+    
+    # Read the spatial data into an sf object
+    wost_sf <- sf::st_read(dest_file, quiet = TRUE)
+    return(wost_sf)
+    
+  }, error = function(e) {
+    cat("Could not download shapefiles. Please check the URL.\n")
+    return(NULL)
+  })
 }
 # =============================================================================
 # 3. Download nest numbers for WOST
