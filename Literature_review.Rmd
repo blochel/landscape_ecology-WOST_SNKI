@@ -1,0 +1,285 @@
+---
+title: "Literature Review"
+author: "Brooke and Alex"
+date: "2024-09-24"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    theme: flatly
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{css, echo=FALSE}
+.citation {
+  font-weight: bold;
+  margin-top: 1.5em;
+}
+.relevance {
+  background-color: #f0f4f8;
+  border-left: 4px solid #2c7bb6;
+  padding: 0.5em 1em;
+  margin-top: 0.5em;
+  border-radius: 4px;
+  font-style: italic;
+}
+.summary {
+  margin: 0.4em 0;
+}
+hr.section-divider {
+  border: none;
+  border-top: 2px solid #dce3ea;
+  margin: 2em 0;
+}
+```
+
+---
+
+# Snail Kite — Nesting & Reproductive Ecology
+
+---
+
+<p class="citation">Cattau et al. (2014)</p>
+
+Cattau, C. E., P. C. Darby, R. J. Fletcher Jr., and W. M. Kitchens. 2014. Reproductive responses of the endangered Snail Kite to variations in prey density. _The Journal of Wildlife Management_ 78:620–631. <https://doi.org/10.1002/jwmg.706>
+
+<p class="summary">Used GLMs to analyze data from WCA3A over 9 years, linking snail density estimates to Snail Kite reproductive success. Young successfully fledged per nest was related to snail density, with a threshold of ~0.4 snails/m² necessary to sustain profitable foraging. Snail density is related to hydrology; water levels were estimated using EDEN (400 × 400 m resolution). Minimum water level was the only significant positive predictor of daily nest survival.</p>
+
+<div class="relevance"> Useful for identifying landscape variables — particularly hydrological ones — that may predict Snail Kite nesting success.</div>
+
+---
+
+<p class="citation">Fletcher et al. (2021)</p>
+
+Fletcher, R. J., Jr., E. P. Robertson, C. Poli, S. Dudek, A. Gonzalez, and B. Jeffery. 2021. Conflicting nest survival thresholds across a wetland network alter management benchmarks for an endangered bird. _Biological Conservation_ 253:108893. <https://doi.org/10.1016/j.biocon.2020.108893>
+
+<p class="summary">Applied "change-point" models to estimate spatial variability in hydrological effects on Snail Kite nest survival across the Everglades. Used daily nest survival with hazard ratios. Water depth at the nest site was the best explanatory variable, along with recession and ascension rates. Common nesting vegetation included sawgrass, bulrush, and cattail.</p>
+
+<div class="relevance"> Useful for identifying landscape variables — particularly water depth dynamics — that predict Snail Kite nesting success.</div>
+
+---
+
+<p class="citation">Gonzalez & Fletcher (2025)</p>
+
+Gonzalez, A., and R. J. Fletcher Jr. 2025. Causes of nest failure vary with water depth, nesting substrate, and adverse weather in the endangered Rostrhamus sociabilis plumbeus (Everglade Snail Kite). _Ornithological Applications_ 127:duaf032. <https://doi.org/10.1093/ornithapp/duaf032>
+
+<p class="summary">Used infrared game cameras to identify causes of nest failure. Decreasing water depth increased predation risk in woody substrates (e.g., willows), while increasing water depth increased abandonment in herbaceous structures. High winds contributed to nest collapse. Vegetation structures included _Salix_ and _Ludwigia_; tall trees like sabal palm and _Taxodium_ were not analyzed.</p>
+
+<div class="relevance"> Particularly useful for understanding how vegetation structure interacts with water depth to influence nest failure.</div>
+
+---
+
+<p class="citation">Snyder et al. (1989)</p>
+
+Snyder, N. F. R., S. R. Beissinger, and R. E. Chandler. 1989. Reproduction and demography of the Florida Everglade (Snail) Kite. _The Condor_ 91:300–316. <https://doi.org/10.2307/1368308>
+
+<p class="summary">Foundational nesting biology: nest construction ~10 days, incubation ~30 days, nestling period ~30 days. Colonial nests defined as within 100 m of another kite nest (67.8% of 590 nests). Willows fledged more young than cattails. High/low water levels did not significantly impact young per successful nest. Noted that woody vegetation typically occurs in shallow water while herbaceous wetlands tolerate greater depths. Best nesting locations were sometimes 2+ km from best foraging grounds.</p>
+
+<div class="relevance"> Helpful for understanding spatial scale and which landscape variables most influence nesting vs. foraging success.</div>
+
+---
+
+<p class="citation">Sykes (1987)</p>
+
+Sykes, P. W., Jr. 1987. Some aspects of the breeding biology of the Snail Kite in Florida. _Journal of Field Ornithology_ 58:171–189.
+
+<p class="summary">Average observed nesting period was ~29 days. Breeding success was lowest in drier years and higher in wetter years. Most young fledge by May, coinciding with the onset of seasonal rains and rising apple snail activity. A combination of strong winds, heavy rain, hail, and cold temperatures was associated with nest failure.</p>
+
+<div class="relevance"> Useful for establishing temporal structure and identifying climate variables influencing Snail Kite nesting.</div>
+
+---
+
+<p class="citation">Pias et al. (2016)</p>
+
+Pias, K. E., R. J. Fletcher Jr., and W. M. Kitchens. 2016. Assessing the value of novel habitats to Snail Kites through foraging behavior and nest survival. _Journal of Fish and Wildlife Management_ 7:449–460. <https://doi.org/10.3996/022016-JFWM-008>
+
+<p class="summary">Compared snail capture success in ephemeral off-lake habitats vs. historic breeding habitat. Following the invasion of the island apple snail, kites expanded foraging into drainage basins, agricultural ponds, and ditches. The highest nest density in 2010 was in an off-lake patch (shingle marsh), where thick vegetation and shallow water may have contributed to higher capture rates.</p>
+
+<div class="relevance"> Useful for understanding how non-lacustrine habitats and wet/dry year variation affect Snail Kite nesting behavior.</div>
+
+---
+
+# Multi-Scale Habitat Modeling — Other Species
+
+---
+
+<p class="citation">Shew et al. (2019)</p>
+
+Shew, J. J., C. K. Nielsen, and D. W. Sparling. 2019. Finer-scale habitat predicts nest survival in grassland birds more than management and landscape: A multi-scale perspective. _Journal of Applied Ecology_ 56:929–945. <https://doi.org/10.1111/1365-2664.13317>
+
+<p class="summary">Investigated nest survival of Red-winged Blackbirds and Dickcissels relative to nest-site, microhabitat, patch, and landscape variables. Fine-scale metrics (e.g., forb cover, vegetation density, distance to edge) were more often in top models than landscape factors. Landscape features may matter more for predation risk than nest success per se.</p>
+
+<div class="relevance"> Good modeling reference for multi-scale approaches to nest survival with parallels to the Snail Kite system.</div>
+
+---
+
+<p class="citation">Gibson et al. (2016)</p>
+
+Gibson, D., E. J. Blomberg, M. T. Atamian, and J. S. Sedinger. 2016. Nesting habitat selection influences nest and early offspring survival in Greater Sage-Grouse. _The Condor: Ornithological Applications_ 118:689–702. <https://doi.org/10.1650/CONDOR-16-62.1>
+
+<p class="summary">Explored adaptive vs. maladaptive habitat use and found fine-scale habitat characteristics were important for both nest and chick survival. Used resource-selection functions to characterize positive habitat attributes. Variables at the local scale influenced survival; landscape-scale variables did not.</p>
+
+<div class="relevance"> Useful for understanding how nest site selection cascades to affect offspring survival beyond just the nest stage.</div>
+
+---
+
+<p class="citation">Lockyer et al. (2015)</p>
+
+Lockyer, Z. B., P. S. Coates, M. L. Casazza, S. Espinosa, and D. J. Delehanty. 2015. Nest-site selection and reproductive success of greater sage-grouse in a fire-affected habitat of northwestern Nevada. _Journal of Wildlife Management_ 79:785–797. <https://doi.org/10.1002/jwmg.899>
+
+<p class="summary">Microhabitat was the most influential scale for nesting success; females selected for greater canopy cover and less invasive grass. Beyond a scale of 0.8 ha, no significant macrohabitat predictors were identified. Vegetation types differed across scales.</p>
+
+<div class="relevance"> Good example of scale thresholds: beyond a certain spatial extent, landscape context may lose predictive power for nest success.</div>
+
+---
+
+<p class="citation">Webb et al. (2012)</p>
+
+Webb, S. L., C. V. Olson, M. R. Dzialak, et al. 2012. Landscape features and weather influence nest survival of a ground-nesting bird of conservation concern, the greater sage-grouse, in human-altered environments. _Ecological Processes_ 1:4. <https://doi.org/10.1186/2192-1709-1-4>
+
+<p class="summary">Used GLMMs to study nest failure in Greater Sage-Grouse, examining landscape variables within 30 m of the nest (vegetation, distance to natural gas wells, precipitation, wind, temperature) using NAIP 1 m imagery. Hypothesized that wet birds may emit stronger scent, potentially attracting more predators after rain events.</p>
+
+<div class="relevance"> Useful for understanding how climatic variables may drive increased predation and nest failure.</div>
+
+---
+
+<p class="citation">Brussee et al. (2023)</p>
+
+Brussee, B. E., P. S. Coates, S. T. O'Neil, et al. 2023. Influence of fine-scale habitat characteristics on sage-grouse nest site selection and nest survival varies by mesic and xeric site conditions. _Ornithological Applications_ 125:duac052. <https://doi.org/10.1093/ornithapp/duac052>
+
+<p class="summary">Fine-scale habitat patterns were important for nest survival and site selection in Greater Sage-Grouse, but responses varied between mesic and xeric conditions — indicating that broad hydrographic landscape type modulates within-species habitat selection patterns.</p>
+
+<div class="relevance"> Interesting for considering how broad landscape context (e.g., water regime) may shape fine-scale selection patterns in Snail Kites.</div>
+
+---
+
+<p class="citation">Refsnider et al. (2022)</p>
+
+Refsnider, J. M., S. E. Carter, A. Diaz, et al. 2022. Macro- and microhabitat predictors of nest success and hatchling survival in Eastern Box Turtles and Spotted Turtles in oak savanna landscapes. _Frontiers in Ecology and Evolution_ 9:788025. <https://doi.org/10.3389/fevo.2021.788025>
+
+<p class="summary">Nest survival was higher farther from edge, later in the season, and at greater nest depth. Post-hatching juvenile survival was higher with less shade and shallower depth — a trade-off, since shade affects incubation and sex determination. Identified costs associated with deeper nests (greater excavation effort = reduced post-emergence energy reserves).</p>
+
+<div class="relevance"> Useful for thinking about trade-offs in nest site selection: variables beneficial for one aspect of survival may be detrimental to another.</div>
+
+---
+
+<p class="citation">Tozer et al. (2010)</p>
+
+Tozer, D. C., E. Nol, and K. F. Abraham. 2010. Effects of local and landscape-scale habitat variables on abundance and reproductive success of wetland birds. _Wetlands Ecology and Management_ 18:679–693. <https://doi.org/10.1007/s11273-010-9187-x>
+
+<p class="summary">Nest success modeled as a function of vegetation cover, nest depth, distance to edge, wetland size, wetland depth, and proportion of wetland within 500 m and 3,000 m buffers. Used residuals from a regression of wetland amount on wetland size to generate a relative measure of landscape wetland context while controlling for size differences.</p>
+
+<div class="relevance"> Useful methodological reference for quantifying wetland landscape attributes in a nest survival framework.</div>
+
+---
+
+<p class="citation">Reidy et al. (2017)</p>
+
+Reidy, J. L., F. R. Thompson III, and L. O'Donnell. 2017. Density and nest survival of golden-cheeked warblers: Spatial scale matters. _Journal of Wildlife Management_ 81:678–689. <https://doi.org/10.1002/jwmg.21234>
+
+<p class="summary">Results indicate that land managers must consider multiple spatial scales simultaneously when designing strategies to optimize both density and nest success.</p>
+
+<div class="relevance"> Reinforces the importance of a multi-scale modeling approach.</div>
+
+---
+
+<p class="citation">Klein et al. (2020)</p>
+
+Klein, J., P. J. Haverkamp, E. Lindberg, M. Griesser, and S. Eggers. 2020. Remotely sensed forest understory density and nest predator occurrence interact to predict suitable breeding habitat and the occurrence of a resident boreal bird species. _Ecology and Evolution_ 10:2238–2252. <https://doi.org/10.1002/ece3.6062>
+
+<p class="summary">Used GLMMs and habitat suitability modeling (HSM); showed good regional agreement between predicted breeding success and occupancy, though success was overestimated in some areas. Demonstrated how multiple interacting factors can predict breeding success across a landscape.</p>
+
+<div class="relevance"> Useful example of how habitat and predator occurrence can interact to shape breeding outcomes across a broader spatial domain.</div>
+
+---
+
+<p class="citation">Alaniz et al. (2021)</p>
+
+Alaniz, A. J., M. A. Carvajal, A. Fierro, et al. 2021. Remote-sensing estimates of forest structure and dynamics as indicators of habitat quality for Magellanic woodpeckers. _Ecological Indicators_ 126:107634. <https://doi.org/10.1016/j.ecolind.2021.107634>
+
+<p class="summary">Used a Bayesian spatial model with remote sensing products (NDVI, LAI, evapotranspiration, temperature, biomass, topography) to characterize habitat quality. Demonstrated that spatially explicit remote sensing allows multi-variable habitat characterization at fine scales.</p>
+
+<div class="relevance"> Useful for considering a Bayesian modeling approach, which may allow for multiple response variables within a single model framework.</div>
+
+---
+
+# Remote Sensing & Hydrology
+
+---
+
+<p class="citation">Kica et al. (2025)</p>
+
+Kica, S., T. M. Pavelsky, J. V. Fayne, and B. A. Williams. 2025. SWOT water surface elevation in herbaceous wetlands of Florida's Everglades. _Geophysical Research Letters_ 52:e2025GL114956. <https://doi.org/10.1029/2025GL114956>
+
+<p class="summary">SWOT satellite water surface elevation (WSE) measurements were highly accurate and strongly correlated with ground-truth gauges in the Everglades (r > 0.996, p < 0.0001; MAE = 6.7 cm overall, improving to 5.5 cm when excluding pixels with fewer than 30 SWOT observations). Used NOAA's 10 m C-CAP land cover data to characterize vegetation near gauges.</p>
+
+<div class="relevance"> Introduces a promising, previously unconsidered data source for hydrological inputs to our modeling framework.</div>
+
+---
+
+<p class="citation">Szulkin et al. (2015)</p>
+
+Szulkin, M., P. Zelazowski, P. Marrot, and A. Charmantier. 2015. Application of high resolution satellite imagery to characterize individual-based environmental heterogeneity in a wild blue tit population. _Remote Sensing_ 7:13319–13336.
+
+<p class="summary">Found high congruence between ground-collected habitat data within 50 m of nestboxes and NDVI values from a 5 × 5 pixel SPOT/Sentinel-2 grid. Fine-resolution satellite data reliably captured habitat heterogeneity validated against field measurements, supporting its use in evolutionary ecology and population-level reproductive studies.</p>
+
+<div class="relevance"> Supports the use of fine-scale satellite imagery as a valid proxy for ground-measured habitat attributes.</div>
+
+---
+
+# Wood Stork — Foraging & Reproductive Ecology
+
+---
+
+<p class="citation">Bryan et al. (1995)</p>
+
+Bryan, A. L., Jr., M. C. Coulter, and C. J. Pennycuick. 1995. Foraging strategies and energetic costs of foraging flights by breeding Wood Storks. _The Condor_ 97. <https://digitalcommons.usf.edu/condor/vol97/iss1/14>
+
+<p class="summary">Median foraging flight distance was 8.8 km, with most flights relatively close to the colony. Foraging frequency was higher during active nesting. Individuals in the latter half of the breeding season made longer flights. Consistent travel to distant food sources disrupts time and energy budgeting, likely increasing breeding stress and reducing reproductive success.</p>
+
+<div class="relevance"> Highlights how landscape-scale foraging distances contribute to Wood Stork breeding outcomes.</div>
+
+---
+
+<p class="citation">Kushlan (1981)</p>
+
+Kushlan, J. A. 1981. Resource use strategies of wading birds. _Wilson Bulletin_ 93:145–163.
+
+<p class="summary">Foraging in flocks decreases search time between food patches, increases the likelihood of locating suitable foraging sites, and reduces the risk of failing to find food entirely.</p>
+
+<div class="relevance"> Useful for understanding how flock size may act as a fine-scale variable contributing to Wood Stork nesting success.</div>
+
+---
+
+<p class="citation">González (1997)</p>
+
+González, J. A. 1997. Seasonal variation in the foraging ecology of the Wood Stork in the southern Llanos of Venezuela. _The Condor: Ornithological Applications_ 99:671–680. <https://doi.org/10.2307/1370479>
+
+<p class="summary">Strong seasonal differences in foraging behavior: dry season featured high flock density and low foot-stirring; wet season featured low grouping but increased foot-stirring. Prey availability, water depth, and vegetation cover varied seasonally, driving shifts in habitat selection, foraging technique, and diet. Fish and amphibian reproductive activity increases during the rainy season.</p>
+
+<div class="relevance"> Critical for understanding how seasonal landscape changes in water depth and prey availability affect Wood Stork productivity.</div>
+
+---
+
+<p class="citation">Borkhataria et al. (2008)</p>
+
+Borkhataria, R. R., P. C. Frederick, R. Hylton, A. L. Bryan Jr., and J. A. Rodgers. 2008. A preliminary model of Wood Stork population dynamics in the Southeastern United States. _Waterbirds_ 31(sp1):42–49. <https://doi.org/10.1675/1524-4695>
+
+<p class="summary">Provides historical population numbers and the timeline of federal protection. First-time breeders have lower reproductive success than experienced individuals. Anthropogenic wetlands contribute positively to total population productivity.</p>
+
+<div class="relevance"> Useful if age/experience data are available; also highlights how anthropogenic landscape features may benefit Wood Stork breeding.</div>
+
+---
+
+<p class="citation">U.S. Fish & Wildlife Service (2010)</p>
+
+U.S. Fish & Wildlife Service. 2010. Florida Programmatic Wood Stork Key. Florida Ecological Services Field Office. <https://ipac.ecosphere.fws.gov/project/LZUISFKXBBDZDHBX4AKCT2J42I/documents/generated/6954.pdf>
+
+<p class="summary">Optimal foraging conditions: calm, open water 5–40 cm deep, free of dense aquatic vegetation. Fish populations may be dense but inaccessible if water depth exceeds ~30 cm or tree canopy prevents landing. Fish density correlates positively with water depth duration: marshes flooded <120 days average ~4 fish/m²; those flooded >340 days average ~25 fish/m². Preferred prey size is 1.5–9 cm. Landscape heterogeneity in the Everglades is highlighted as critical to Wood Stork foraging.</p>
+
+<div class="relevance"> Key reference for defining foraging habitat conditions and linking water depth/flooding duration to prey availability and breeding success.</div>
