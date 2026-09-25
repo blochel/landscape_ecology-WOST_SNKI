@@ -178,6 +178,67 @@ process_eden_data <- function(eden_path = "data/WaterData") {
   return(water)
 }
 
+# Extract daily mean water depth per region
+
+
+get_daily_water_levels <- function(
+    eden_path       = "data/WaterData",
+    level           = "subregions",
+    years           = NULL,
+    boundaries_path = "https://raw.githubusercontent.com/weecology/EvergladesWadingBird/refs/heads/main/SiteandMethods/",
+    colony_buffers  = edenR::default_colony_buffers()) {
+  
+  eden_path <- gsub("\\\\", "/", normalizePath(eden_path))
+  
+  if (is.null(years)) {
+    years <- edenR::available_years(eden_path)
+    years <- years[years >= 1993]
+  }
+  
+  eden_data_files <- list.files(eden_path, pattern = "_depth.nc")
+  boundaries      <- edenR:::get_boundaries(boundaries_path, level, colony_buffers)
+  examp_file      <- stars::read_stars(paste0(eden_path, "/", eden_data_files[1]))
+  boundaries_utm  <- sf::st_transform(boundaries, sf::st_crs(examp_file))
+  
+  all_daily <- list()
+  
+  for (year in years) {
+    print(paste("Extracting daily levels for", year, "..."))
+    
+    pattern <- paste0(year, "_.*_depth.nc")
+    nc_files <- list.files(eden_path, pattern, full.names = TRUE)
+    nc_files <- gsub("\\\\", "/", nc_files)
+    
+    time_values <- do.call(c, lapply(nc_files, get_nc_times_fixed))
+    
+    year_data <- stars::read_stars(nc_files, along = "time") %>%
+      stars::st_set_dimensions("time", values = time_values) %>%
+      setNames("depth") %>%
+      dplyr::mutate(depth = dplyr::case_when(
+        depth <  units::set_units(0, cm) ~ units::set_units(0, cm),
+        depth >= units::set_units(0, cm) ~ depth,
+        is.na(depth)                     ~ units::set_units(NA, cm)
+      ))
+    
+    # Extract mean depth per region per day
+    daily <- edenR:::extract_region_means(year_data, boundaries_utm) %>%
+      dplyr::rename(date = time, region = Name, depth_cm = value) %>%
+      dplyr::mutate(
+        date   = as.Date(date),
+        year   = as.integer(year),
+        region = as.character(region)
+      ) %>%
+      as.data.frame() %>%
+      dplyr::select(-geometry)
+    
+    all_daily[[as.character(year)]] <- daily
+  }
+  
+  result <- dplyr::bind_rows(all_daily) %>%
+    dplyr::arrange(region, date)
+  
+  return(result)
+}
 # =============================================================================
 # 2. Download shapefiles of nesting location for WOST
 # =============================================================================
@@ -244,6 +305,13 @@ cat("========================================================\n\n")
 # 1. EDEN Data
 eden_water_data <- process_eden_data(eden_path = "data/WaterData")
 write_csv(eden_water_data, "data/processed_eden_water.csv")
+
+# 1b. Daily water levels
+daily_water <- get_daily_water_levels(
+  eden_path = "data/WaterData",
+  level     = "subregions"   # or "all", "wcas"
+)
+write_csv(daily_water, "data/daily_water_levels.csv")
 
 # 2. Shapefiles
 download_wost_shapefiles()
