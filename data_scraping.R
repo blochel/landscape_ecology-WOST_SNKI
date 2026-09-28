@@ -10,7 +10,7 @@ library(sf)
 library(RNetCDF)
 library(stars)
 library(units)
-
+library(lubridate) # Added for date manipulation
 # =============================================================================
 # 1. Download and Process daily EDEN data
 # =============================================================================
@@ -51,7 +51,6 @@ download_eden_fixed <- function(eden_path = "data/WaterData", max_retries = 3) {
   cat("\nDownload complete!\n")
 }
 
-
 get_nc_times_fixed <- function(nc_file) {
   nc <- RNetCDF::open.nc(nc_file)
   on.exit(RNetCDF::close.nc(nc))
@@ -59,12 +58,8 @@ get_nc_times_fixed <- function(nc_file) {
   time_vals  <- RNetCDF::var.get.nc(nc, "time")
   time_units <- RNetCDF::att.get.nc(nc, "time", "units")
   
-  # Extract just the date-time part after "days since "
   datetime_str <- sub("days since ", "", time_units)
-  
-  # Normalize both formats to a single parseable string:
   datetime_str <- trimws(gsub("Z$|\\+0000$", "", trimws(datetime_str)))
-  
   epoch <- as.POSIXct(datetime_str, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
   
   epoch + as.difftime(time_vals, units = "days")
@@ -77,12 +72,9 @@ get_eden_covariates_fixed <- function(
     boundaries_path = "https://raw.githubusercontent.com/weecology/EvergladesWadingBird/refs/heads/main/SiteandMethods/",
     colony_buffers  = edenR::default_colony_buffers()) {
   
-  # Fix Windows backslash issue
   eden_path <- gsub("\\\\", "/", normalizePath(eden_path))
-  
   eden_data_files <- list.files(eden_path, pattern = "_depth.nc")
   boundaries      <- edenR:::get_boundaries(boundaries_path, level, colony_buffers)
-  
   examp_eden_file <- stars::read_stars(paste0(eden_path, "/", eden_data_files[1]))
   boundaries_utm  <- sf::st_transform(boundaries, sf::st_crs(examp_eden_file))
   
@@ -102,7 +94,6 @@ get_eden_covariates_fixed <- function(
     )
     nc_files <- gsub("\\\\", "/", nc_files)
     
-    # Use fixed time reader
     time_values <- do.call(c, lapply(nc_files, get_nc_times_fixed))
     
     year_data <- stars::read_stars(nc_files, along = "time") %>%
@@ -114,10 +105,6 @@ get_eden_covariates_fixed <- function(
         is.na(depth)                     ~ units::set_units(NA, cm)
       ))
     
-    
-
-# Sections to edit if needed ----------------------------------------------
-
     breed_start <- as.POSIXct(paste0(year, "-01-01"), tz = "UTC")
     breed_end   <- as.POSIXct(paste0(year, "-06-30"), tz = "UTC")
     breed_season_data <- year_data %>%
@@ -156,12 +143,10 @@ get_eden_covariates_fixed <- function(
   return(covariates)
 }
 
-# Processing function
 process_eden_data <- function(eden_path = "data/WaterData") {
   eden_path <- gsub("\\\\", "/", normalizePath(eden_path))
   cat("Calculating covariates from:", eden_path, "\n")
   
-  # Only process years with available data
   target_years <- edenR::available_years(eden_path)
   target_years <- target_years[target_years >= 1993]
   
@@ -177,9 +162,6 @@ process_eden_data <- function(eden_path = "data/WaterData") {
   
   return(water)
 }
-
-# Extract daily mean water depth per region
-
 
 get_daily_water_levels <- function(
     eden_path       = "data/WaterData",
@@ -220,7 +202,6 @@ get_daily_water_levels <- function(
         is.na(depth)                     ~ units::set_units(NA, cm)
       ))
     
-    # Extract mean depth per region per day
     daily <- edenR:::extract_region_means(year_data, boundaries_utm) %>%
       dplyr::rename(date = time, region = Name, depth_cm = value) %>%
       dplyr::mutate(
@@ -239,6 +220,7 @@ get_daily_water_levels <- function(
   
   return(result)
 }
+
 # =============================================================================
 # 2. Download shapefiles of nesting location for WOST
 # =============================================================================
@@ -302,16 +284,38 @@ cat("========================================================\n")
 cat("STARTING DATA SCRAPING PIPELINE\n")
 cat("========================================================\n\n")
 
-# 1. EDEN Data
+# 1. EDEN Covariates
 eden_water_data <- process_eden_data(eden_path = "data/WaterData")
 write_csv(eden_water_data, "data/processed_eden_water.csv")
 
 # 1b. Daily water levels
 daily_water <- get_daily_water_levels(
   eden_path = "data/WaterData",
-  level     = "subregions"   # or "all", "wcas"
+  level     = "subregions"   
 )
 write_csv(daily_water, "data/daily_water_levels.csv")
+
+# 1c. Aggregated water levels (Moved here!)
+cat("Calculating weekly, monthly, and yearly water averages...\n")
+
+weekly_water <- daily_water |>
+  mutate(week_start = floor_date(date, unit = "week")) |>
+  group_by(region, year, week_start) |>
+  summarise(avg_depth_cm = mean(depth_cm, na.rm = TRUE), .groups = "drop")
+write_csv(weekly_water, "data/weekly_water_levels.csv")
+
+monthly_water <- daily_water |>
+  mutate(month = month(date)) |>
+  group_by(region, year, month) |>
+  summarise(avg_depth_cm = mean(depth_cm, na.rm = TRUE), .groups = "drop")
+write_csv(monthly_water, "data/monthly_water_levels.csv")
+
+yearly_water <- daily_water |>
+  group_by(region, year) |>
+  summarise(avg_depth_cm = mean(depth_cm, na.rm = TRUE), .groups = "drop")
+write_csv(yearly_water, "data/yearly_water_levels.csv")
+
+cat("✓ Weekly, monthly, and yearly averages successfully saved.\n")
 
 # 2. Shapefiles
 download_wost_shapefiles()
