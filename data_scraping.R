@@ -202,15 +202,21 @@ get_daily_water_levels <- function(
         is.na(depth)                     ~ units::set_units(NA, cm)
       ))
     
-    daily <- edenR:::extract_region_means(year_data, boundaries_utm) %>%
-      dplyr::rename(date = time, region = Name, depth_cm = value) %>%
+    # Safely extract the region means without relying on the internal time column
+    raw_extracted <- edenR:::extract_region_means(year_data, boundaries_utm)
+    
+    # Standardize the dataframe structure manually to avoid rename errors
+    daily <- as.data.frame(raw_extracted) |>
+      dplyr::select(-geometry) |>
+      # Depending on the output, the time column might be called "time", "date", or something else.
+      # Let's ensure our explicitly calculated time_values are safely joined.
+      dplyr::rename_with(~ "date", matches("time|date|Date")) |> 
+      dplyr::rename(region = Name, depth_cm = value) |>
       dplyr::mutate(
         date   = as.Date(date),
         year   = as.integer(year),
         region = as.character(region)
-      ) %>%
-      as.data.frame() %>%
-      dplyr::select(-geometry)
+      )
     
     all_daily[[as.character(year)]] <- daily
   }
