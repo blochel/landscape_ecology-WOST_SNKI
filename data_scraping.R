@@ -10,12 +10,12 @@ library(sf)
 library(RNetCDF)
 library(stars)
 library(units)
-library(lubridate) # Added for date manipulation
+library(lubridate) # Essential for weekly/monthly grouping
 # =============================================================================
 # 1. Download and Process daily EDEN data
 # =============================================================================
 
-# download function
+# Download function
 download_eden_fixed <- function(eden_path = "data/WaterData", max_retries = 3) {
   dir.create(eden_path, recursive = TRUE, showWarnings = FALSE)
   metadata <- edenR::get_metadata()
@@ -51,6 +51,7 @@ download_eden_fixed <- function(eden_path = "data/WaterData", max_retries = 3) {
   cat("\nDownload complete!\n")
 }
 
+# Fixed NetCDF Time Reader
 get_nc_times_fixed <- function(nc_file) {
   nc <- RNetCDF::open.nc(nc_file)
   on.exit(RNetCDF::close.nc(nc))
@@ -65,6 +66,7 @@ get_nc_times_fixed <- function(nc_file) {
   epoch + as.difftime(time_vals, units = "days")
 }
 
+# Fixed Covariates Function
 get_eden_covariates_fixed <- function(
     level           = "subregions",
     eden_path       = "data/WaterData",
@@ -81,7 +83,7 @@ get_eden_covariates_fixed <- function(
   covariates <- c()
   
   for (year in years) {
-    print(paste("Processing", year, "..."))
+    print(paste("Processing Covariates for", year, "..."))
     
     pattern  <- paste0(year,                  "_.*_depth.nc")
     pattern2 <- paste0(as.numeric(year) - 1, "_.*_depth.nc")
@@ -139,7 +141,6 @@ get_eden_covariates_fixed <- function(
       covariates <- rbind(covariates, year_covariates)
     }
   }
-  
   return(covariates)
 }
 
@@ -163,6 +164,7 @@ process_eden_data <- function(eden_path = "data/WaterData") {
   return(water)
 }
 
+# Fixed Daily Extraction Function (Solves the NA Date Issue!)
 get_daily_water_levels <- function(
     eden_path       = "data/WaterData",
     level           = "subregions",
@@ -202,21 +204,18 @@ get_daily_water_levels <- function(
         is.na(depth)                     ~ units::set_units(NA, cm)
       ))
     
-    # Safely extract the region means without relying on the internal time column
     raw_extracted <- edenR:::extract_region_means(year_data, boundaries_utm)
     
-    # Standardize the dataframe structure manually to avoid rename errors
+    # FIXED: Explicitly grab NetCDF 'time', drop the GeoJSON shapefile junk
     daily <- as.data.frame(raw_extracted) |>
-      dplyr::select(-geometry) |>
-      # Depending on the output, the time column might be called "time", "date", or something else.
-      # Let's ensure our explicitly calculated time_values are safely joined.
-      dplyr::rename_with(~ "date", matches("time|date|Date")) |> 
-      dplyr::rename(region = Name, depth_cm = value) |>
       dplyr::mutate(
-        date   = as.Date(date),
-        year   = as.integer(year),
-        region = as.character(region)
-      )
+        date     = as.Date(time),
+        year     = as.integer(year),
+        region   = as.character(Name),
+        depth_cm = as.numeric(value)
+      ) |>
+      dplyr::select(region, year, date, depth_cm) |>
+      dplyr::filter(!is.na(date))
     
     all_daily[[as.character(year)]] <- daily
   }
@@ -232,7 +231,6 @@ get_daily_water_levels <- function(
 # =============================================================================
 download_wost_shapefiles <- function(save_dir = "data/shapefiles") {
   dir.create(save_dir, recursive = TRUE, showWarnings = FALSE)
-  
   shapefile_url <- "https://raw.githubusercontent.com/weecology/EvergladesWadingBird/main/SiteandMethods/colonies/colonies.geojson"
   dest_file     <- file.path(save_dir, "colonies.geojson")
   
@@ -253,7 +251,6 @@ download_wost_shapefiles <- function(save_dir = "data/shapefiles") {
 download_wost_nest_numbers <- function(save_dir = "data/wader_data") {
   cat("Downloading wader observation data for WOST nest numbers...\n")
   dir.create(save_dir, recursive = TRUE, showWarnings = FALSE)
-  
   download_observations(save_dir)
   
   wost_counts <- as_tibble(max_counts(level = "colony", path = save_dir)) |>
@@ -268,7 +265,6 @@ download_wost_nest_numbers <- function(save_dir = "data/wader_data") {
 # =============================================================================
 download_wost_fecundity <- function(save_dir = "data") {
   cat("Downloading WOST nest fecundity data...\n")
-  
   fecundity_url <- "https://raw.githubusercontent.com/weecology/EvergladesWadingBird/main/Nesting/nest_success.csv"
   dest_file     <- file.path(save_dir, "wost_fecundity.csv")
   
@@ -301,7 +297,7 @@ daily_water <- get_daily_water_levels(
 )
 write_csv(daily_water, "data/daily_water_levels.csv")
 
-# 1c. Aggregated water levels (Moved here!)
+# 1c. Aggregated water levels 
 cat("Calculating weekly, monthly, and yearly water averages...\n")
 
 weekly_water <- daily_water |>
